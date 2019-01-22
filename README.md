@@ -5,8 +5,7 @@
        src="https://raw.githubusercontent.com/afawcett/githubsfdeploy/master/src/main/webapp/resources/img/deploy.png">
 </a>
 
-Apex Batches can be chained by calling the successor batch from the `finish()` method of the previous batch. But such hardcoding makes this model inflexible. It's hard to build the chain from outside, neighter from a central class nor on runtime dependant on business logic.
-
+## With `Chainable`
 
 The `Chainable` wrapper class of this repository overcomes those drawbacks.
 
@@ -14,7 +13,17 @@ The `Chainable` wrapper class of this repository overcomes those drawbacks.
  - Created batch chains of arbitrary length without changing existing Batch classes
  - Allows asynchronous and synchronous testing of Batch chains
 
+```java
+      new SecondBatch()
+            .then(FirstBatch())
+            .then(ThirdBatch())
+            ...
+            .execute();
+```
+
 ## Without `Chainable`
+
+Apex Batches can be chained by calling the successor batch from the `finish()` method of the previous batch. But such hardcoding makes this model inflexible. It's hard to build the chain from outside, neighter from a central class nor on runtime dependant on business logic.
 
 ```java
 class FirstBatch implements Batchable<SObject> {
@@ -39,17 +48,6 @@ class SecondBatch implements Batchable<SObject> {
     }
 }
 ```
-
-## With `Chainable`
-
-```java
-      new SecondBatch()
-            .then(FirstBatch())
-            .then(ThirdBatch())
-            ...
-            .execute();
-```
-
 
 
 
