@@ -2,7 +2,7 @@
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>apex-chainable-batch</fullName>
     <types>
-        <members>ChainableBatch</members>
+        <members>Chainable</members>
         <members>ChainableBatch_Test</members>
         <name>ApexClass</name>
     </types>
