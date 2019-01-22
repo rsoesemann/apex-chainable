@@ -5,12 +5,12 @@
        src="https://raw.githubusercontent.com/afawcett/githubsfdeploy/master/src/main/webapp/resources/img/deploy.png">
 </a>
 
-Apex Batches can be chained by calling the successor batch from the finish method of the previous. But hardcoding the successor makes this model inflexible. It's hard to build the chain from outside, eighter from a central place or during runtime dependant on business logic.
+Apex Batches can be chained by calling the successor batch from the `finish()` method of the previous batch. But such hardcoding makes this model inflexible. It's hard to build the chain from outside, neighter from a central class nor on runtime dependant on business logic.
 
 
 The `Chainable` wrapper class of this repository overcomes those drawbacks.
 
- - No need to hardcode successor batch in finish method
+ - No need to hardcode successor batch in `finish()` method
  - Created batch chains of arbitrary length without changing existing Batch classes
  - Allows asynchronous and synchronous testing of Batch chains
 
