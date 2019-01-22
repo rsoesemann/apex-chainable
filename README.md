@@ -16,7 +16,7 @@ The `Chainable` wrapper class of this repository overcomes those drawbacks.
 
 ## Without `Chainable`
 
-```
+```java
 class FirstBatch implements Batchable<SObject> {
     Iterator<SObject> start(BatchableContext ctx) { ... }
 
@@ -28,7 +28,7 @@ class FirstBatch implements Batchable<SObject> {
 }
 ```
 
-```
+```java
 class SecondBatch implements Batchable<SObject> {
     Iterator<SObject> start(BatchableContext ctx) { ... }
 
@@ -42,7 +42,7 @@ class SecondBatch implements Batchable<SObject> {
 
 ## With `Chainable`
 
-```
+```java
       new SecondBatch()
             .then(FirstBatch())
             .then(ThirdBatch())
