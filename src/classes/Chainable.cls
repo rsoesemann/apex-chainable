@@ -1,4 +1,4 @@
-public abstract class Chainable implements Database.Batchable<SObject>, Database.Stateful {
+public abstract class Chainable implements Database.Batchable<Object>, Database.Stateful {
 
 	private Chainable successor;
 	private Boolean synchronouslyInTests = false;
@@ -6,24 +6,19 @@ public abstract class Chainable implements Database.Batchable<SObject>, Database
 
 	// ABSTRACT
 
-	protected abstract Iterable<SObject> start(Chainable.Context ctx);
-	protected abstract void execute(Chainable.Context ctx, Iterable<SObject> scope);
+	protected abstract Iterable<Object> start(Chainable.Context ctx);
+	protected abstract void execute(Chainable.Context ctx, Iterable<Object> scope);
 	protected abstract void finish(Chainable.Context ctx);
 
 
 	// PUBLIC
 
-	public virtual Integer batchSize() {
-		return 200;
-	}
-
-
-	public Iterable<SObject> start(Database.BatchableContext ctx) {
+	public Iterable<Object> start(Database.BatchableContext ctx) {
 		return start(new Chainable.Context(ctx));
 	}
 
 
-	public void execute(Database.BatchableContext ctx, Iterable<SObject> scope) {
+	public void execute(Database.BatchableContext ctx, Iterable<Object> scope) {
 		execute(new Chainable.Context(ctx), scope);
 	}
 
@@ -65,13 +60,29 @@ public abstract class Chainable implements Database.Batchable<SObject>, Database
 	}
 
 
-	// PRIVATE
+    // PROTECTED
 
+    protected virtual Integer batchSize() {
+        return 200;
+    }
+
+
+    protected Iterable<Object> cast(List<SObject> records) {
+        return (Iterable<Object>) records;
+    }
+
+
+    protected List<SObject> cast(Iterable<Object> records) {
+        return (List<SObject>) records;
+    }
+
+
+	// PRIVATE
 
 	private void executeSynchronously() {
 		Context nullCtx = new Context();
 
-		Iterable<SObject> fullScope = start(nullCtx);
+		Iterable<Object> fullScope = start(nullCtx);
 		if(fullScope.iterator().hasNext()) {
 			execute(nullCtx, fullScope);
 			finish(nullCtx);

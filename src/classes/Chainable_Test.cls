@@ -12,10 +12,10 @@ private class Chainable_Test {
 		Test.startTest();
 
 		new SetIndustryBatch('Automotive')
-						.then(new AddPhoneBatch())
-						.then(new MultiplyRevenueBatch(2))
+                    .then(new AddPhoneBatch())
+                    .then(new MultiplyRevenueBatch(2))
 
-						.execute();
+                    .execute();
 
 		Test.stopTest();
 
@@ -40,6 +40,7 @@ private class Chainable_Test {
 		new SetIndustryBatch('Automotive')
 					.then(new AddPhoneBatch())
 					.then(new MultiplyRevenueBatch(2))
+                    .then(new CustomIteratorBatch(new List<String>{ 'France', 'Spain', 'Germany' }))
 
 					.synchronouslyInTests()
 
