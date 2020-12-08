@@ -25,8 +25,8 @@ public abstract class ChainableSchedulable extends Chainable
 
 
     public virtual String cronExpression() {
-        // Note: Every minute
-        return '0 1 0 * * ?';
+        Datetime dt = Datetime.now().addMinutes(1);
+        return dt.second() + ' ' + dt.minute() + ' ' + dt.hour() + ' * * ?';
     }
 
 

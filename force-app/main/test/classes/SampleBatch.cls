@@ -15,7 +15,4 @@ public class SampleBatch extends ChainableBatch {
 	protected override void finish(Context ctx) {
 		Chainable_Test.log(this);
 	}
-
-
-
 }
