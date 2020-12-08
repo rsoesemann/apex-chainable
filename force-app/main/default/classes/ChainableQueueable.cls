@@ -1,5 +1,5 @@
-public abstract class ChainableQueueable extends Chainable implements Queueable {
-
+public abstract class ChainableQueueable extends Chainable
+                                         implements Queueable, Database.AllowsCallouts {
     // ABSTRACT
 
     protected abstract void execute(Context ctx);
@@ -21,7 +21,7 @@ public abstract class ChainableQueueable extends Chainable implements Queueable 
     }
 
 
-    public override void executeSynchronously() {
-        execute(new Context());
+    public override void executeSynchronously(Context ctx) {
+        execute(ctx);
     }
 }

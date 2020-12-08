@@ -1,8 +1,5 @@
-public abstract class ChainableBatch extends Chainable implements Database.Batchable<Object>, Database.Stateful {
-
-    protected Integer batchSize  = 200;
-
-
+public abstract class ChainableBatch extends Chainable
+                                     implements Database.Batchable<Object>, Database.Stateful, Database.AllowsCallouts {
     // ABSTRACT
 
     protected abstract Iterable<Object> start(Context ctx);
@@ -13,39 +10,39 @@ public abstract class ChainableBatch extends Chainable implements Database.Batch
     // PUBLIC
 
     public Iterable<Object> start(Database.BatchableContext ctx) {
-        return start(new Context(ctx));
+        return start( new Context(ctx) );
     }
 
 
     public void execute(Database.BatchableContext ctx, Iterable<Object> scope) {
-        execute(new Context(ctx), scope);
+        execute( new Context(ctx), scope );
     }
 
 
     public void finish(Database.BatchableContext ctx) {
-        finish(new Context(ctx));
+        finish( new Context(ctx) );
 
         executeNext();
     }
 
-    public virtual ChainableBatch batchSize(Integer value) {
-        batchSize = value;
-        return this;
+
+    protected virtual Integer batchSize() {
+        return 200;
     }
 
 
     public override void executeAsynchronously() {
-        Database.executeBatch(this, batchSize);
+        Database.executeBatch(this, batchSize());
     }
 
 
-    public override void executeSynchronously() {
-        Context nullCtx = new Context();
-        Iterable<Object> fullScope = start(nullCtx);
+    public override void executeSynchronously(Context ctx) {
+        Iterable<Object> fullScope = start(ctx);
 
         if(fullScope.iterator().hasNext()) {
-            execute(nullCtx, fullScope);
-            finish(nullCtx);
+            execute(ctx, fullScope);
         }
+
+        finish(ctx);
     }
 }

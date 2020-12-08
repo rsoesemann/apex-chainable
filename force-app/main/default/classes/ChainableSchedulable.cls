@@ -1,48 +1,37 @@
-public abstract class ChainableSchedulable extends Chainable implements Schedulable {
-
-    protected String cronExpression = '0 0 12 * * ?';
-    protected String name = thisClassName();
-
-
+public abstract class ChainableSchedulable extends Chainable
+                                           implements Schedulable, Database.AllowsCallouts {
     // ABSTRACT
 
-    protected abstract void execute(Chainable.Context ctx);
+    protected abstract void execute(Context ctx);
 
 
     // PUBLIC
 
-    public ChainableSchedulable cron(String value) {
-        cronExpression = value;
-        return this;
-    }
-
-
-    public ChainableSchedulable name(String value) {
-        name = value;
-        return this;
-    }
-
-
     public void execute(SchedulableContext ctx) {
-        execute(new Chainable.Context(ctx));
+        execute(new Context(ctx));
 
         executeNext();
     }
 
 
     public override void executeAsynchronously() {
-        System.schedule(name, cronExpression, this);
+        System.schedule(name(), cronExpression(), this);
     }
 
 
-    public override void executeSynchronously() {
-        execute(new Chainable.Context());
+    public override void executeSynchronously(Context ctx) {
+        execute(ctx);
     }
 
 
-    // PRIVATE
+    public virtual String cronExpression() {
+        // Note: Every minute
+        return '0 1 0 * * ?';
+    }
 
-    private String thisClassName() {
-        return String.valueOf(this).substring(0,String.valueOf(this).indexOf(':'));
+
+    public virtual String name() {
+        // Note: This class name
+        return String.valueOf(this).substring(0, String.valueOf(this).indexOf(':'));
     }
 }
