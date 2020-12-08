@@ -17,13 +17,14 @@ The `Chainable` wrapper class of this repository overcomes those drawbacks.
 
  - No need to hardcode successor batch in `finish()` method
  - Created batch chains of arbitrary length without changing existing Batch classes
- - Allows asynchronous and synchronous testing of Batch chains
+ - Support `Queueable` and `Schedulable` classes as chain members
+ - Allows sharing and passing of variables between chain members
 
 ```java
-      new FirstBatch()
-            .then(AnotherBatch().batchSize(1))
+      new FirstBatch().setShared('result', new Money(0))
+            .then(AnotherBatch())
             .then(QueueableJob())
-            .then(ScheduledJob().cron(...))
+            .then(ScheduledJob())
             ...
             .execute();
 ```
