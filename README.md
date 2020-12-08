@@ -1,4 +1,4 @@
-# Apex Chainable [![Codacy Badge](https://api.codacy.com/project/badge/Grade/43edbab28bc1480b948d5659383ee802)](https://www.codacy.com/app/rsoesemann/apex-chainable?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=rsoesemann/apex-chainable-batch&amp;utm_campaign=Badge_Grade)
+# Apex Chainable [![Codacy Badge](https://app.codacy.com/project/badge/Grade/7024ec2e01c24c03a323e565e029a5a6)](https://www.codacy.com/gh/rsoesemann/apex-chainable/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=rsoesemann/apex-chainable&amp;utm_campaign=Badge_Grade)
 
 <a href="https://githubsfdeploy.herokuapp.com?owner=rsoesemann&repo=apex-chainable-batch">
   <img alt="Deploy to Salesforce"
