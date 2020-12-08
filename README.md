@@ -5,7 +5,11 @@
        src="https://raw.githubusercontent.com/afawcett/githubsfdeploy/master/src/main/webapp/resources/img/deploy.png">
 </a>
 
-Apex Batches can be chained by calling the successor batch from the `finish()` method of the previous batch. But such hardcoding makes this model inflexible. It's hard to build the chain from outside, neighter from a central class nor on runtime dependant on business logic.
+Apex Batches can be chained by calling the successor batch from the `finish()` method of the previous batch. 
+But such hardcoding makes this model inflexible. It's hard to build the chain from outside, neighter from a central class 
+nor on runtime dependant on business logic.
+
+The same applies when the `execute()` method of `Schedulable` or `Queueable` classes call other classes.
 
 ## With `Chainable`
 
@@ -16,9 +20,10 @@ The `Chainable` wrapper class of this repository overcomes those drawbacks.
  - Allows asynchronous and synchronous testing of Batch chains
 
 ```java
-      new SecondBatch()
-            .then(FirstBatch())
-            .then(ThirdBatch())
+      new FirstBatch()
+            .then(AnotherBatch().batchSize(1))
+            .then(QueueableJob())
+            .then(ScheduledJob().cron(...))
             ...
             .execute();
 ```
@@ -38,13 +43,13 @@ class FirstBatch implements Batchable<SObject> {
 ```
 
 ```java
-class SecondBatch implements Batchable<SObject> {
+class AnotherBatch implements Batchable<SObject> {
     Iterator<SObject> start(BatchableContext ctx) { ... }
 
     void execute(BatchableContext ctx, List<Account> scope) { ... }
 
     void finish(BatchableContext ctx) {
-        Database.enqueueBatch(new ThirdBatch()); 
+        System.schedule('name', cron, new ScheduledJob()); 
     }
 }
 ```
