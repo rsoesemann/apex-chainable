@@ -17,7 +17,7 @@ The `Chainable` wrapper class of this repository overcomes those drawbacks.
 
  - No need to hardcode successor batch in `finish()` method
  - Created batch chains of arbitrary length without changing existing Batch classes
- - Support `Queueable` and `Schedulable` classes as chain members
+ - Support `Batchable`, `Queueable` and `Schedulable` classes as chain members
  - Allows sharing and passing of variables between chain members
 
 ```java
