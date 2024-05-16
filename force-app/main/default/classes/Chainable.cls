@@ -12,6 +12,33 @@ public abstract class Chainable {
 	protected abstract void executeSynchronously(Context ctx);
 
 	
+	// VIRTUAL
+
+	public virtual void setDeferredArgs(String serializedArgs) {}
+
+	
+	public virtual void setDeferredShared(String serializedShared) {
+		Map<String, Object> hydratedShared = (Map<String, Object>)JSON.deserializeUntyped(serializedShared);
+		for(String key : hydratedShared.keySet()) {
+			setShared(key, hydratedShared.get(key));
+		}
+	}
+	
+
+	protected virtual String getDeferArgs() {
+		return null;
+	}
+
+
+	protected virtual String getDeferShared() {
+		return JSON.serialize(sharedVariables);
+	}
+
+
+	protected virtual void handleDeferException(Exception e) {
+		throw e;
+	}
+
 	// PUBLIC
 
 	public Chainable then(Chainable successor) {
@@ -53,7 +80,49 @@ public abstract class Chainable {
         return sharedVariables.get(key);
     }
 
-	
+
+	public Chainable defer() {
+
+		List<ChainableDeferredEvent__e> deferEvents = unlink();
+
+		if(Limits.getLimitDMLStatements() < deferEvents.size()) {
+			handleDeferException(new DeferLimitException());
+		}
+
+		for(Database.SaveResult publishResult : EventBus.publish(deferEvents)) {
+			if(!publishResult.isSuccess()) {
+				handleDeferException(new DeferPublishException(publishResult.getErrors()));
+			}
+		}
+
+		return this;
+    }
+
+
+	public List<ChainableDeferredEvent__e> unlink() {
+
+		List<ChainableDeferredEvent__e> deferEvents = new List<ChainableDeferredEvent__e>();
+
+		try {
+			deferEvents.add(new ChainableDeferredEvent__e(
+				InstanceName__c = String.valueOf(this).substringBefore(':'), 
+				Arguments__c = getDeferArgs(),
+				Shared__c = getDeferShared()
+			));
+		}
+		catch(Exception e) {
+			handleDeferException(new DeferUnlinkException(e));
+		}
+		finally {
+			if(next != null) {
+				deferEvents.addAll(next.unlink());
+			}
+		}
+
+		return deferEvents;
+	}
+
+
 	// PROTECTED
 
 	protected void executeNext() {
@@ -86,5 +155,19 @@ public abstract class Chainable {
 		public Object get() {
 			return originalContext;
 		}
+	}
+
+
+	public class DeferLimitException extends Exception {}
+	public class DeferUnlinkException extends Exception {}
+	public class DeferPublishException extends Exception {
+		public DeferPublishException(List<Database.Error> publishErrors) {
+			List<String> messages = new List<String>();
+			for(Database.Error error : publishErrors) {
+				messages.add(error.getMessage());
+			}
+
+			setMessage(String.join(messages, '\n'));
+		}	
 	}
 }
