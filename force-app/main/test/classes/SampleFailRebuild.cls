@@ -10,7 +10,7 @@ public class SampleFailRebuild extends ChainableQueueable {
 		protected override String getDeferArgs() {
 			return errorToThrow;
 		}
-		public override void setDeferredArgs(String serializedArgs) {
+		protected override void setDeferredArgs(String serializedArgs) {
 			throw new Chainable.DeferUnlinkException(serializedArgs);
 		}
 

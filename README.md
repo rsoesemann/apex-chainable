@@ -67,13 +67,13 @@ To mitigate these pitfalls, the `Chainable` framework enables a way to *defer* t
 new FirstBatch()
         .then(AnotherBatch())
         .setShared('result', new Money(0)) // shared variables will be available across other following deferred chainables
-        .defer();
+        .executeDeferred();
 
 // automation 2
 new QueueableJob()
             .then(ScheduledJob())
             ...
-            .defer();
+            .executeDeferred();
 
 
 ```

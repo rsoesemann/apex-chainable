@@ -39,14 +39,14 @@ public class Chainable_Test {
 		// Execute
 		Chainable chain = new SampleSchedulable()
 									.setShared(CALL_LOG, new List<String>())
-									.defer();
+									.executeDeferred();
 
 		Chainable chain2 = new SampleBatch()
 
 									.then( new SampleQueueable() )
 									.then( new SampleDeferArgQueueable(true) )
 
-									.defer();
+									.executeDeferred();
 
 		Test.stopTest();
 
@@ -68,7 +68,7 @@ public class Chainable_Test {
 		// Execute
 		try {
 			Chainable chain = new SampleFailDefer()
-										.defer();
+										.executeDeferred();
 
 			System.assert(false);
 		}
@@ -86,15 +86,15 @@ public class Chainable_Test {
 		
 		Test.startTest();
 
-		List<ChainableDeferredEvent__e> unlinkEvents = new SampleFailRebuild(errorMsg)
+		List<Chainable__e> unlinkEvents = new SampleFailRebuild(errorMsg)
 																.unlink();
 
 		System.assertEquals(1, unlinkEvents.size());
 
-		DeferredChainableBuilder.DeferredChainLink param = new DeferredChainableBuilder.DeferredChainLink();
+		Chainable.DeferredChainLink param = new Chainable.DeferredChainLink();
 		param.deferEvent = unlinkEvents[0];
 
-		List<DeferredChainableBuilder.DeferRebuildResult> results = DeferredChainableBuilder.rebuildAndExecuteChain(new DeferredChainableBuilder.DeferredChainLink[]{param});
+		List<Chainable.DeferRebuildResult> results = Chainable.rebuildAndExecuteChain(new Chainable.DeferredChainLink[]{param});
 
 		Test.stopTest();
 
@@ -106,20 +106,20 @@ public class Chainable_Test {
 
 		Test.startTest();
 
-		List<ChainableDeferredEvent__e> unlinkEvents = new SampleFailRebuildInner()
+		List<Chainable__e> unlinkEvents = new SampleFailRebuildInner()
 																.unlink();
 
 		System.assertEquals(1, unlinkEvents.size());
 
-		DeferredChainableBuilder.DeferredChainLink param = new DeferredChainableBuilder.DeferredChainLink();
+		Chainable.DeferredChainLink param = new Chainable.DeferredChainLink();
 		param.deferEvent = unlinkEvents[0];
 
-		List<DeferredChainableBuilder.DeferRebuildResult> results = DeferredChainableBuilder.rebuildAndExecuteChain(new DeferredChainableBuilder.DeferredChainLink[]{param});
+		List<Chainable.DeferRebuildResult> results = Chainable.rebuildAndExecuteChain(new Chainable.DeferredChainLink[]{param});
 
 		Test.stopTest();
 
 		System.assert(!results[0].success);
-		System.assert(results[0].error.startsWith(DeferredChainableBuilder.INVALID_CLASS_MSG));
+		System.assert(results[0].error.startsWith(Chainable.INVALID_CLASS_MSG));
 	}
 
 	// HELPER

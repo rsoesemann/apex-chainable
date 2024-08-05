@@ -2,7 +2,7 @@
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
     <deploymentStatus>Deployed</deploymentStatus>
     <eventType>HighVolume</eventType>
-    <label>Chainable Deferred Event</label>
-    <pluralLabel>Chainable Deferred Events</pluralLabel>
+    <label>Chainable</label>
+    <pluralLabel>Chainables</pluralLabel>
     <publishBehavior>PublishAfterCommit</publishBehavior>
 </CustomObject>

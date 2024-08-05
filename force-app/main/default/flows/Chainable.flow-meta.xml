@@ -5,7 +5,7 @@
         <label>Execute Deferred</label>
         <locationX>176</locationX>
         <locationY>170</locationY>
-        <actionName>DeferredChainableBuilder</actionName>
+        <actionName>Chainable</actionName>
         <actionType>apex</actionType>
         <inputParameters>
             <name>deferEvent</name>
@@ -15,8 +15,8 @@
         </inputParameters>
     </actionCalls>
     <apiVersion>60.0</apiVersion>
-    <interviewLabel>Chainable Deferred {!$Flow.CurrentDateTime}</interviewLabel>
-    <label>Chainable Deferred Listener</label>
+    <interviewLabel>Chainable {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Chainable</label>
     <processMetadataValues>
         <name>BuilderType</name>
         <value>
@@ -42,7 +42,7 @@
         <connector>
             <targetReference>ExecuteDeferred</targetReference>
         </connector>
-        <object>ChainableDeferredEvent__e</object>
+        <object>Chainable__e</object>
         <triggerType>PlatformEvent</triggerType>
     </start>
     <status>Active</status>
