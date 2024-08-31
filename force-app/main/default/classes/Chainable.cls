@@ -1,7 +1,7 @@
 public abstract class Chainable {
 
 	@TestVisible
-    private static final String INVALID_CLASS_MSG = 'Invalid class ';
+	private static final String INVALID_CLASS_MSG = 'Invalid class ';
 	
 	private Chainable previous;
 	private Chainable next;
@@ -46,34 +46,34 @@ public abstract class Chainable {
 
 
 	@InvocableMethod(label='Rebuild chain from deferred chainables and execute')
-    public static List<DeferRebuildResult> rebuildAndExecuteChain(List<DeferredChainLink> deferredLinks) {
-        Chainable chain;
-        Chainable iteratingInstance;
+	public static List<DeferRebuildResult> rebuildAndExecuteChain(List<DeferredChainLink> deferredLinks) {
+		Chainable chain;
+		Chainable iteratingInstance;
 
-        List<DeferRebuildResult> results = new List<DeferRebuildResult>();
+		List<DeferRebuildResult> results = new List<DeferRebuildResult>();
 
-        for(DeferredChainLink deferredLink : deferredLinks) {
+		for(DeferredChainLink deferredLink : deferredLinks) {
 
-            try {
-                iteratingInstance = deferredLink.getLinkableInstance();
-                
-                if(chain == null) {
-                    chain = iteratingInstance;
-                } 
-                else {
-                    chain.then(iteratingInstance);
-                }
-                results.add(new DeferRebuildResult());
-            }
-            catch(Exception e) {
-                results.add(new DeferRebuildResult(e.getMessage()));
-            }
-        }
+			try {
+				iteratingInstance = deferredLink.getLinkableInstance();
+				
+				if(chain == null) {
+					chain = iteratingInstance;
+				} 
+				else {
+					chain.then(iteratingInstance);
+				}
+				results.add(new DeferRebuildResult());
+			}
+			catch(Exception e) {
+				results.add(new DeferRebuildResult(e.getMessage()));
+			}
+		}
 
-        chain?.execute();
+		chain?.execute();
 
-        return results;
-    }
+		return results;
+	}
 
 
 	public Chainable then(Chainable successor) {
@@ -104,16 +104,16 @@ public abstract class Chainable {
 	}
 
 
-    public Chainable setShared(String key, Object value) {
-        sharedVariables.put(key, value);
+	public Chainable setShared(String key, Object value) {
+		sharedVariables.put(key, value);
 
 		return this;
-    }
+	}
 
 
-    public Object getShared(String key) {
-        return sharedVariables.get(key);
-    }
+	public Object getShared(String key) {
+		return sharedVariables.get(key);
+	}
 
 
 	public Chainable executeDeferred() {
@@ -131,7 +131,7 @@ public abstract class Chainable {
 		}
 
 		return this;
-    }
+	}
 
 	@TestVisible
 	private List<Chainable__e> unlink() {
@@ -194,48 +194,48 @@ public abstract class Chainable {
 
 	public class DeferredChainLink {
 
-        @InvocableVariable(required=true)
-        public Chainable__e deferEvent;
+		@InvocableVariable(required=true)
+		public Chainable__e deferEvent;
 
-        public Chainable getLinkableInstance() {
-            Chainable linkableInstance;
+		public Chainable getLinkableInstance() {
+			Chainable linkableInstance;
 
-            Type jobType = Type.forName(deferEvent.InstanceName__c);
+			Type jobType = Type.forName(deferEvent.InstanceName__c);
 
-            if(jobType != null && Chainable.class.isAssignableFrom(jobType)) {
-                
-                linkableInstance = (Chainable)jobType.newInstance();
-                linkableInstance.setDeferredShared(deferEvent.Shared__c);
-                if(String.isNotBlank(deferEvent.Arguments__c)) {
-                    linkableInstance.setDeferredArgs(deferEvent.Arguments__c);
-                }
-            }
-            else {
-                throw new DeferredIsNotChainableException(INVALID_CLASS_MSG + deferEvent.InstanceName__c);
-            }
+			if(jobType != null && Chainable.class.isAssignableFrom(jobType)) {
+				
+				linkableInstance = (Chainable)jobType.newInstance();
+				linkableInstance.setDeferredShared(deferEvent.Shared__c);
+				if(String.isNotBlank(deferEvent.Arguments__c)) {
+					linkableInstance.setDeferredArgs(deferEvent.Arguments__c);
+				}
+			}
+			else {
+				throw new DeferredIsNotChainableException(INVALID_CLASS_MSG + deferEvent.InstanceName__c);
+			}
 
-            return linkableInstance;
-        }
-    }
+			return linkableInstance;
+		}
+	}
 
 	
 	public class DeferRebuildResult {
 
-        @InvocableVariable
-        public Boolean success;
+		@InvocableVariable
+		public Boolean success;
 
-        @InvocableVariable
-        public String error;
+		@InvocableVariable
+		public String error;
 
-        public DeferRebuildResult() {
-            success = true;
-        }
+		public DeferRebuildResult() {
+			success = true;
+		}
 
-        public DeferRebuildResult(String errorDetail) {
-            success = false;
-            error = errorDetail;
-        }
-    }
+		public DeferRebuildResult(String errorDetail) {
+			success = false;
+			error = errorDetail;
+		}
+	}
 
 
 	public class DeferLimitException extends Exception {}
