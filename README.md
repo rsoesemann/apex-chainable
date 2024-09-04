@@ -55,7 +55,38 @@ class AnotherBatch implements Batchable<SObject> {
 }
 ```
 
+## Deferring
 
+When all the "links" in the chain cannot be completely identified beforehand in order to assemble them in a single chain and trigger its execution, the chain execution can be *deferred* until the end of the transaction. All chainable processes that have been *deferred* will be automatically chained together in a **single** chain and executed sequentually.
 
+```java
 
+// automation 1
+new FirstBatch()
+        .then(AnotherBatch())
+        .setShared('result', new Money(0)) // shared variables will be available across other following deferred chainables
+        .executeDeferred();
 
+// automation 2
+new QueueableJob()
+        .then(ScheduledJob())
+        ...
+        .executeDeferred();
+
+// the framework would internally build the chain in a separate transaction with a definition like this
+new FirstBatch()
+        .then(AnotherBatch())
+        .setShared('result', new Money(0))
+        .then(QueueableJob())
+        .then(ScheduledJob())
+        .execute();
+
+```
+
+### Considerations
+
+In order to leverage the deferring of the Chainable instances there are some nuances compared to its direct execution.
+
+* Override the `getDeferArgs` and `setDeferredArgs` if the class receives external input before its execution via constructor parameters or setters to serialize and deserialize them (See the `SampleDeferArgQueueable`).
+* Must have a no-arg constructor (if no explicit constructor exists, the default implicit one will be used)
+* Must not be an inner class (due to difficulty on dynamic name inferring)
