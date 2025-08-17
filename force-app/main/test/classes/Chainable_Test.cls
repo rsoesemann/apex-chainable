@@ -18,6 +18,7 @@ public class Chainable_Test {
 
 									.then( new SampleBatch() )
 									.then( new SampleQueueable() )
+									.then( new SampleDataBatch() )
 
 									.execute();
 
@@ -28,6 +29,9 @@ public class Chainable_Test {
 		System.assertEquals('SampleBatch.execute', (String)calls.next());
 		System.assertEquals('SampleBatch.finish', (String)calls.next());
 		System.assertEquals('SampleQueueable.execute', (String)calls.next());
+		System.assertEquals('SampleDataBatch.start', (String)calls.next());
+		System.assertEquals('SampleDataBatch.execute', (String)calls.next());
+		System.assertEquals('SampleDataBatch.finish', (String)calls.next());
 	}
 
 
